@@ -405,21 +405,42 @@
                 <!--
                     An 8px right margin is added to visually match the spacing between the icon
                     and the left margin of the list.
-                    ItemRepeater is a lightweight control (compared to ItemsControl).
+                    Tags are capped at 3 with a [+N] overflow badge to prevent
+                    unbounded growth that pushes the title out of view.
                 -->
-                <ItemsRepeater
+                <StackPanel
                     Grid.Column="2"
                     Margin="0,0,8,0"
                     VerticalAlignment="Center"
-                    IsHitTestVisible="False"
-                    IsTabStop="False"
-                    ItemTemplate="{StaticResource TagTemplate}"
-                    ItemsSource="{x:Bind Tags, Mode=OneWay}"
+                    Orientation="Horizontal"
+                    Spacing="4"
                     Visibility="{x:Bind HasTags, Mode=OneWay}">
-                    <ItemsRepeater.Layout>
-                        <StackLayout Orientation="Horizontal" Spacing="4" />
-                    </ItemsRepeater.Layout>
-                </ItemsRepeater>
+                    <ItemsRepeater
+                        VerticalAlignment="Center"
+                        IsHitTestVisible="False"
+                        IsTabStop="False"
+                        ItemTemplate="{StaticResource TagTemplate}"
+                        ItemsSource="{x:Bind VisibleTags, Mode=OneWay}">
+                        <ItemsRepeater.Layout>
+                            <StackLayout Orientation="Horizontal" Spacing="4" />
+                        </ItemsRepeater.Layout>
+                    </ItemsRepeater>
+                    <Border
+                        Padding="{StaticResource TagPadding}"
+                        VerticalAlignment="Center"
+                        AutomationProperties.Name="{x:Bind OverflowTagText, Mode=OneWay}"
+                        Background="{ThemeResource TagBackground}"
+                        BorderBrush="{ThemeResource TagBorderBrush}"
+                        BorderThickness="{StaticResource TagBorderThickness}"
+                        CornerRadius="{ThemeResource ControlCornerRadius}"
+                        Visibility="{x:Bind HasOverflowTags, Mode=OneWay}">
+                        <TextBlock
+                            Margin="0,-1,0,0"
+                            FontSize="12"
+                            Foreground="{ThemeResource TagForeground}"
+                            Text="{x:Bind OverflowTagText, Mode=OneWay}" />
+                    </Border>
+                </StackPanel>
             </Grid>
         </DataTemplate>
 

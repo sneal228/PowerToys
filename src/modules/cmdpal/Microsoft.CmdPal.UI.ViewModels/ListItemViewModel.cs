@@ -12,6 +12,8 @@ namespace Microsoft.CmdPal.UI.ViewModels;
 
 public partial class ListItemViewModel : CommandItemViewModel
 {
+    private const int MaxVisibleTags = 3;
+
     public new ExtensionObject<IListItem> Model { get; }
 
     public List<TagViewModel>? Tags { get; set; }
@@ -19,6 +21,14 @@ public partial class ListItemViewModel : CommandItemViewModel
     // Remember - "observable" properties from the model (via PropChanged)
     // cannot be marked [ObservableProperty]
     public bool HasTags => (Tags?.Count ?? 0) > 0;
+
+    public List<TagViewModel>? VisibleTags { get; private set; }
+
+    public int OverflowTagCount { get; private set; }
+
+    public bool HasOverflowTags => OverflowTagCount > 0;
+
+    public string OverflowTagText => $"+{OverflowTagCount}";
 
     public string TextToSuggest { get; private set; } = string.Empty;
 
@@ -273,11 +283,36 @@ public partial class ListItemViewModel : CommandItemViewModel
                 // Tags being an ObservableCollection instead of a List lead to
                 // many COM exception issues.
                 Tags = [.. newTags];
+                UpdateVisibleTags();
 
                 // We're already in UI thread, so just raise the events
                 OnPropertyChanged(nameof(Tags));
                 OnPropertyChanged(nameof(HasTags));
+                OnPropertyChanged(nameof(VisibleTags));
+                OnPropertyChanged(nameof(OverflowTagCount));
+                OnPropertyChanged(nameof(HasOverflowTags));
+                OnPropertyChanged(nameof(OverflowTagText));
             });
+    }
+
+    private void UpdateVisibleTags()
+    {
+        var allTags = Tags;
+        if (allTags is null || allTags.Count == 0)
+        {
+            VisibleTags = null;
+            OverflowTagCount = 0;
+        }
+        else if (allTags.Count <= MaxVisibleTags)
+        {
+            VisibleTags = allTags;
+            OverflowTagCount = 0;
+        }
+        else
+        {
+            VisibleTags = allTags.Take(MaxVisibleTags).ToList();
+            OverflowTagCount = allTags.Count - MaxVisibleTags;
+        }
     }
 
     private void UpdateShowsTitle()
