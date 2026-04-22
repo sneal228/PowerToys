@@ -408,39 +408,19 @@
                     Tags are capped at 3 with a [+N] overflow badge to prevent
                     unbounded growth that pushes the title out of view.
                 -->
-                <StackPanel
+                <ItemsRepeater
                     Grid.Column="2"
                     Margin="0,0,8,0"
                     VerticalAlignment="Center"
-                    Orientation="Horizontal"
-                    Spacing="4"
+                    IsHitTestVisible="False"
+                    IsTabStop="False"
+                    ItemTemplate="{StaticResource TagTemplate}"
+                    ItemsSource="{x:Bind VisibleTags, Mode=OneWay}"
                     Visibility="{x:Bind HasTags, Mode=OneWay}">
-                    <ItemsRepeater
-                        VerticalAlignment="Center"
-                        IsHitTestVisible="False"
-                        IsTabStop="False"
-                        ItemTemplate="{StaticResource TagTemplate}"
-                        ItemsSource="{x:Bind VisibleTags, Mode=OneWay}">
-                        <ItemsRepeater.Layout>
-                            <StackLayout Orientation="Horizontal" Spacing="4" />
-                        </ItemsRepeater.Layout>
-                    </ItemsRepeater>
-                    <Border
-                        Padding="{StaticResource TagPadding}"
-                        VerticalAlignment="Center"
-                        AutomationProperties.Name="{x:Bind OverflowTagText, Mode=OneWay}"
-                        Background="{ThemeResource TagBackground}"
-                        BorderBrush="{ThemeResource TagBorderBrush}"
-                        BorderThickness="{StaticResource TagBorderThickness}"
-                        CornerRadius="{ThemeResource ControlCornerRadius}"
-                        Visibility="{x:Bind HasOverflowTags, Mode=OneWay}">
-                        <TextBlock
-                            Margin="0,-1,0,0"
-                            FontSize="12"
-                            Foreground="{ThemeResource TagForeground}"
-                            Text="{x:Bind OverflowTagText, Mode=OneWay}" />
-                    </Border>
-                </StackPanel>
+                    <ItemsRepeater.Layout>
+                        <StackLayout Orientation="Horizontal" Spacing="4" />
+                    </ItemsRepeater.Layout>
+                </ItemsRepeater>
             </Grid>
         </DataTemplate>
 

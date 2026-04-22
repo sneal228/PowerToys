@@ -24,12 +24,6 @@ public partial class ListItemViewModel : CommandItemViewModel
 
     public List<TagViewModel>? VisibleTags { get; private set; }
 
-    public int OverflowTagCount { get; private set; }
-
-    public bool HasOverflowTags => OverflowTagCount > 0;
-
-    public string OverflowTagText => $"+{OverflowTagCount}";
-
     public string TextToSuggest { get; private set; } = string.Empty;
 
     public string Section { get; private set; } = string.Empty;
@@ -289,9 +283,6 @@ public partial class ListItemViewModel : CommandItemViewModel
                 OnPropertyChanged(nameof(Tags));
                 OnPropertyChanged(nameof(HasTags));
                 OnPropertyChanged(nameof(VisibleTags));
-                OnPropertyChanged(nameof(OverflowTagCount));
-                OnPropertyChanged(nameof(HasOverflowTags));
-                OnPropertyChanged(nameof(OverflowTagText));
             });
     }
 
@@ -301,17 +292,24 @@ public partial class ListItemViewModel : CommandItemViewModel
         if (allTags is null || allTags.Count == 0)
         {
             VisibleTags = null;
-            OverflowTagCount = 0;
         }
         else if (allTags.Count <= MaxVisibleTags)
         {
             VisibleTags = allTags;
-            OverflowTagCount = 0;
         }
         else
         {
-            VisibleTags = allTags.Take(MaxVisibleTags).ToList();
-            OverflowTagCount = allTags.Count - MaxVisibleTags;
+            var visible = allTags.Take(MaxVisibleTags).ToList();
+            var overflowCount = allTags.Count - MaxVisibleTags;
+            var overflowTag = new TagViewModel(
+                new Tag($"+{overflowCount}")
+                {
+                    ToolTip = overflowCount == 1 ? $"+{overflowCount} more tag" : $"+{overflowCount} more tags",
+                },
+                PageContext);
+            overflowTag.InitializeProperties();
+            visible.Add(overflowTag);
+            VisibleTags = visible;
         }
     }
 
