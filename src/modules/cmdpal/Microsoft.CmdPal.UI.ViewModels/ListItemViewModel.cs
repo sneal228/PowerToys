@@ -301,10 +301,11 @@ public partial class ListItemViewModel : CommandItemViewModel
         {
             var visible = allTags.Take(MaxVisibleTags).ToList();
             var overflowCount = allTags.Count - MaxVisibleTags;
+            var hiddenTagNames = allTags.Skip(MaxVisibleTags).Select(t => t.Text);
             var overflowTag = new TagViewModel(
                 new Tag($"+{overflowCount}")
                 {
-                    ToolTip = overflowCount == 1 ? $"+{overflowCount} more tag" : $"+{overflowCount} more tags",
+                    ToolTip = string.Join("\n", hiddenTagNames),
                 },
                 PageContext);
             overflowTag.InitializeProperties();
