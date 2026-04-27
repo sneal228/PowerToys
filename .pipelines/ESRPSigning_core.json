@@ -141,6 +141,7 @@
             "WinUI3Apps\\PowerToys.EnvironmentVariables.dll",
             "WinUI3Apps\\PowerToys.EnvironmentVariables.exe",
 
+            "PowerToys.ImageResizer.exe",
             "WinUI3Apps\\PowerToys.ImageResizer.exe",
             "WinUI3Apps\\PowerToys.ImageResizer.dll",
             "WinUI3Apps\\PowerToys.ImageResizerCLI.exe",
