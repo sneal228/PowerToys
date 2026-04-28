@@ -370,3 +370,7 @@ installer/*/*.wxs.bk
 .squad-workstream
 .github/agents/**squad**.md
 .github/workflows/**squad**.yml
+
+
+#Ignore vscode AI rules
+.github\instructions\codacy.instructions.md
